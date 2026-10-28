@@ -37,7 +37,7 @@ export function PrivacyPolicyPage() {
           <section className="space-y-2">
             <h2 className="text-sm font-bold text-white uppercase tracking-wider">1. Introduction & Scope</h2>
             <p>
-              TravelSafe Clinic, directed by Dr. Gaurav Gupta, MD (Punjab Medical Council Reg. No. {DOCTOR_REG_NO}), is committed to protecting your personal data in accordance with the <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong> and the <strong>DPDP Rules, 2025</strong>. This notice explains how we collect, process, and safeguard your data when you request appointments, utilize teleconsultation services, or communicate with our clinical staff.
+              TravelSafe Clinic, directed by Dr. Gaurav Gupta, DCH, DNB (Punjab Medical Council Reg. No. {DOCTOR_REG_NO}), is committed to protecting your personal data in accordance with the <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong> and the <strong>DPDP Rules, 2025</strong>. This notice explains how we collect, process, and safeguard your data when you request appointments, utilize teleconsultation services, or communicate with our clinical staff.
             </p>
           </section>
 
@@ -89,7 +89,7 @@ export function PrivacyPolicyPage() {
               <div><strong>Designated Officer:</strong> Clinical Administration, Charak Clinics</div>
               <div><strong>Email:</strong> <a href={`mailto:${CLINIC_EMAIL}`} className="text-emerald-400 underline">{CLINIC_EMAIL}</a></div>
               <div><strong>Telephone:</strong> {CLINIC_PHONE}</div>
-              <div><strong>Physical Address:</strong> Charak Clinics, SCO 5, Sector 69, SAS Nagar (Mohali), Punjab 160062, India</div>
+              <div><strong>Physical Address:</strong> Charak Clinics, SCF 30, Phase 3B2, Sector 60, SAS Nagar (Mohali), Punjab 160059, India</div>
               <div><strong>Standard Redressal Response Time:</strong> Within 72 business hours.</div>
             </div>
           </section>

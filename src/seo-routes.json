@@ -1,0 +1,53 @@
+{
+  "origin": "https://travelsafeclinic.in",
+  "routes": [
+    {
+      "path": "/",
+      "name": "Home",
+      "title": "TravelSafe Clinic | International Travel Vaccines & University Clearances Mohali",
+      "description": "Travel medicine clinic led by Dr. Gaurav Gupta, DCH, DNB (Pediatrics), CTH® (ISTM), PMC Reg No. 33261. University immunization forms, QuantiFERON-TB testing, altitude advice and adult vaccines at Charak Clinics, Phase 3B2, Mohali."
+    },
+    {
+      "path": "/university-immunization-form",
+      "name": "University Immunization Forms",
+      "title": "University Immunization Form Clearance Mohali & Chandigarh | TravelSafe Clinic",
+      "description": "Physician-reviewed US, UK and Canada university immunization forms in Mohali: QuantiFERON-TB (IGRA) after BCG, MMR, varicella and hepatitis B titers, MenACWY and MenB. Video consult INR 1,000."
+    },
+    {
+      "path": "/yellow-fever-card-punjab",
+      "name": "Yellow Fever Card Punjab",
+      "title": "Yellow Fever Vaccination Card (ICVP) in Punjab: Where and How | TravelSafe Clinic",
+      "description": "Where the official yellow fever ICVP card is issued in Punjab, what to carry, when it becomes valid, and how a pre-travel consult with Dr. Gaurav Gupta fits in. Confirm centre timings before you go."
+    },
+    {
+      "path": "/ladakh-ebc-altitude",
+      "name": "High Altitude Medicine",
+      "title": "High Altitude Medicine for Ladakh, Everest Base Camp & Treks | TravelSafe Clinic",
+      "description": "Acute mountain sickness prevention for Ladakh, Everest Base Camp and Kilimanjaro: acclimatization, acetazolamide (Diamox) planning, red-flag symptoms and a trek medical kit, from a travel medicine physician in Mohali."
+    },
+    {
+      "path": "/hajj-umrah-vaccines",
+      "name": "Hajj & Umrah Vaccines",
+      "title": "Hajj & Umrah Vaccines from Mohali: MenACWY, Influenza & Certificates | TravelSafe Clinic",
+      "description": "Vaccines and health certificates for Hajj and Umrah pilgrims from Punjab and Chandigarh: meningococcal ACWY, influenza, polio and routine boosters, with timing advice from Dr. Gaurav Gupta."
+    },
+    {
+      "path": "/shingrix-adult-vaccines",
+      "name": "Adult Vaccines",
+      "title": "Adult Vaccines in Mohali: Shingrix, Pneumococcal, Tdap & HPV | TravelSafe Clinic",
+      "description": "Which adult vaccines matter after 50 and with diabetes: Shingrix, pneumococcal, Tdap and HPV. Evidence summaries from Dr. Gaurav Gupta, author of The Invisible Shield. Cold-chain administration in Mohali."
+    },
+    {
+      "path": "/about-dr-gupta",
+      "name": "About Dr. Gaurav Gupta",
+      "title": "Dr. Gaurav Gupta, DCH, DNB, CTH® | Travel Medicine Physician, Mohali | TravelSafe Clinic",
+      "description": "Credentials, registration (PMC 33261), memberships and publications of Dr. Gaurav Gupta, pediatrician and ISTM-certified travel health physician at Charak Clinics, Phase 3B2, Mohali."
+    },
+    {
+      "path": "/privacy-policy",
+      "name": "Privacy Policy",
+      "title": "Privacy Policy & DPDP Notice | TravelSafe Clinic",
+      "description": "How TravelSafe Clinic collects, uses and protects your contact and health information under the Digital Personal Data Protection Act, and how to withdraw consent."
+    }
+  ]
+}

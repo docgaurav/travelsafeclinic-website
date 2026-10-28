@@ -20,3 +20,48 @@
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out forwards;
 }
+
+/* Warm light sections (book + booking). Scoped remap of the dark utility colours. */
+.theme-warm {
+  background-color: #faf6ee !important;
+  background-image: none !important;
+  color: #1f2a37;
+  border-color: rgba(20, 33, 61, 0.1);
+}
+.theme-warm .text-white { color: #14213d; }
+.theme-warm .text-slate-300 { color: #3b4656; }
+.theme-warm .text-slate-400 { color: #566275; }
+.theme-warm .text-emerald-300,
+.theme-warm .text-emerald-400 { color: #047857; }
+.theme-warm .text-teal-300,
+.theme-warm .text-cyan-300 { color: #0f766e; }
+.theme-warm .text-amber-300,
+.theme-warm .text-amber-400 { color: #b45309; }
+.theme-warm [class*="border-white"] { border-color: rgba(20, 33, 61, 0.14); }
+.theme-warm .bg-slate-950\/80,
+.theme-warm .bg-slate-950\/70,
+.theme-warm .bg-slate-900\/90,
+.theme-warm .bg-slate-900,
+.theme-warm .bg-slate-800\/40 {
+  background-color: #ffffff;
+  background-image: none;
+  box-shadow: 0 1px 2px rgba(20, 33, 61, 0.06), 0 8px 24px -12px rgba(20, 33, 61, 0.15);
+}
+.theme-warm .bg-slate-800 { background-color: #ece6d8; }
+.theme-warm .bg-emerald-500\/10,
+.theme-warm .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+.theme-warm .bg-amber-500\/10,
+.theme-warm .bg-amber-500\/20 { background-color: rgba(217, 119, 6, 0.12); }
+.theme-warm .bg-teal-500\/20,
+.theme-warm .bg-cyan-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+.theme-warm input,
+.theme-warm select,
+.theme-warm textarea { color: #14213d; background-color: #fff; }
+.theme-warm input::placeholder,
+.theme-warm textarea::placeholder { color: #8a94a6; }
+.theme-warm input[type="date"] { color-scheme: light; }
+.theme-warm .from-slate-900 {
+  background-image: none;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(20, 33, 61, 0.06), 0 16px 40px -16px rgba(20, 33, 61, 0.2);
+}

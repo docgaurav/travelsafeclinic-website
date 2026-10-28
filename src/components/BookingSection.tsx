@@ -24,7 +24,7 @@ export function BookingSection() {
   };
 
   return (
-    <section id="booking" className="py-20 bg-[#070d18] relative">
+    <section id="booking" className="theme-warm py-24 md:py-32 bg-[#070d18] relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         
         <div className="bg-gradient-to-br from-slate-900 to-[#0e192c] border border-white/15 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
@@ -38,7 +38,7 @@ export function BookingSection() {
               Schedule Your Travel Medicine Consultation
             </h2>
             <p className="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto">
-              Consult with Dr. Gaurav Gupta via Video Teleconsultation ({VIDEO_CONSULT_FEE}) or schedule an in-person clinical appointment at Charak Clinics, Sector 69, Mohali.
+              Consult with Dr. Gaurav Gupta via Video Teleconsultation ({VIDEO_CONSULT_FEE}) or schedule an in-person clinical appointment at Charak Clinics, SCF 30, Phase 3B2, Mohali.
             </p>
           </div>
 

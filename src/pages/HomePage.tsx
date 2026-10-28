@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { VideoStudio } from "../components/VideoStudio";
 import { Calculator } from "../components/Calculator";
+import { ClinicGallery } from "../components/ClinicGallery";
 import { BookingSection } from "../components/BookingSection";
 import { CLINIC_WHATSAPP, CLINIC_PHONE, VIDEO_CONSULT_FEE, DOCTOR_REG_NO } from "../components/Navbar";
 
@@ -210,7 +211,7 @@ export function HomePage() {
               </h1>
 
               <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
-                Structured pre-travel medical evaluations, international university immunization clearance, cold-chain vaccine administration, altitude sickness prophylaxis, and adult immunology by <strong className="text-white font-semibold">Dr. Gaurav Gupta, MD, CTH®</strong>.
+                Structured pre-travel medical evaluations, international university immunization clearance, cold-chain vaccine administration, altitude sickness prophylaxis, and adult immunology by <strong className="text-white font-semibold">Dr. Gaurav Gupta, DCH, DNB, CTH®</strong>.
               </p>
 
               <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -229,15 +230,6 @@ export function HomePage() {
                   <Play className="w-4 h-4 text-emerald-400 fill-emerald-400" />
                   <span>Watch Clinical Videos (4)</span>
                 </a>
-
-                <button
-                  type="button"
-                  onClick={() => sendWhatsApp()}
-                  className="px-5 py-3.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold text-xs border border-emerald-500/30 transition-colors flex items-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>WhatsApp Staff</span>
-                </button>
               </div>
 
               {/* Factual Aggregate Trust Metrics (NMC Compliant) */}
@@ -247,8 +239,8 @@ export function HomePage() {
                   <div className="text-[11px] text-slate-400">Years Clinical Practice</div>
                 </div>
                 <div className="bg-white/[0.03] p-3 rounded-xl border border-white/5">
-                  <div className="text-xl font-bold text-emerald-400">4.2°C</div>
-                  <div className="text-[11px] text-slate-400">WHO Cold-Chain Vault</div>
+                  <div className="text-xl font-bold text-emerald-400">50 hrs</div>
+                  <div className="text-[11px] text-slate-400">Vaccine fridge holdover without power</div>
                 </div>
                 <div className="bg-white/[0.03] p-3 rounded-xl border border-white/5">
                   <div className="text-xl font-bold text-cyan-400">{VIDEO_CONSULT_FEE}</div>
@@ -280,11 +272,11 @@ export function HomePage() {
                   <div className="flex items-center gap-3">
                     <img 
                       src="/images/dr-gaurav-gupta.jpg" 
-                      alt="Dr. Gaurav Gupta, MD, CTH®" 
+                      alt="Dr. Gaurav Gupta, DCH, DNB, CTH®" 
                       className="w-12 h-12 rounded-full object-cover ring-2 ring-emerald-400/50"
                     />
                     <div>
-                      <div className="font-bold text-white text-base">Dr. Gaurav Gupta, MD</div>
+                      <div className="font-bold text-white text-base">Dr. Gaurav Gupta, DCH, DNB</div>
                       <div className="text-xs text-emerald-400 font-medium">ISTM Certified Travel Health Specialist</div>
                     </div>
                   </div>
@@ -296,7 +288,7 @@ export function HomePage() {
                   <div className="pt-2 flex items-center justify-between text-xs border-t border-white/10">
                     <span className="text-slate-400 flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-emerald-400" />
-                      Appointments Mon - Sat
+                      Mon - Sat · 10:30-2, 4:30-7
                     </span>
                     <Link 
                       to="/about-dr-gupta"
@@ -320,8 +312,10 @@ export function HomePage() {
       {/* Feature 2: Interactive Departure Calculator */}
       <Calculator />
 
+      <ClinicGallery />
+
       {/* Feature 3: Destination Health Threat Radar */}
-      <section id="radar" className="py-20 bg-[#09111e] border-t border-white/5 relative">
+      <section id="radar" className="py-24 md:py-32 bg-[#09111e] border-t border-white/5 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           
           <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
@@ -466,7 +460,7 @@ export function HomePage() {
       </section>
 
       {/* Feature 4: The Invisible Shield & Adult Vaccines */}
-      <section id="invisible-shield" className="py-20 bg-[#070d18] relative">
+      <section id="invisible-shield" className="theme-warm py-24 md:py-32 bg-[#070d18] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           
           <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
@@ -604,7 +598,7 @@ export function HomePage() {
       </section>
 
       {/* Feature 5: Yellow Fever Punjab Center */}
-      <section id="yellow-fever" className="py-20 bg-[#09111e] border-t border-white/5 relative">
+      <section id="yellow-fever" className="py-24 md:py-32 bg-[#09111e] border-t border-white/5 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-xs font-semibold">
@@ -653,16 +647,6 @@ export function HomePage() {
               <p className="text-xs text-slate-300 leading-relaxed">
                 Medical contraindication waivers for seniors (60+) and immunosuppressed travelers, plus co-scheduled Typhoid, Hepatitis, and Malaria prophylaxis.
               </p>
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={() => sendWhatsApp()}
-                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-colors flex items-center gap-1.5"
-                >
-                  <MessageCircle className="w-3.5 h-3.5 fill-slate-950" />
-                  <span>WhatsApp Staff</span>
-                </button>
-              </div>
             </div>
           </div>
         </div>

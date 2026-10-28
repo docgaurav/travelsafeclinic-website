@@ -15,7 +15,7 @@ export function Footer() {
           </div>
 
           <p className="text-slate-400 leading-relaxed text-xs">
-            A specialist travel health, student immunization clearance, and adult vaccination practice led by <strong className="text-white">Dr. Gaurav Gupta</strong>, MD (Pediatrics), CTH® (ISTM). Operating at Charak Clinics, Mohali.
+            A specialist travel health, student immunization clearance, and adult vaccination practice led by <strong className="text-white">Dr. Gaurav Gupta</strong>, DCH, DNB (Pediatrics), CTH® (ISTM). Operating at Charak Clinics, Mohali.
           </p>
 
           <div className="p-3.5 rounded-xl bg-slate-900/80 border border-white/5 space-y-1.5 text-[11px]">
@@ -23,7 +23,7 @@ export function Footer() {
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
               <span>Physician Regulatory Disclosure</span>
             </div>
-            <div>Doctor: <strong className="text-slate-200">Dr. Gaurav Gupta, MD</strong></div>
+            <div>Doctor: <strong className="text-slate-200">Dr. Gaurav Gupta, DCH, DNB</strong></div>
             <div>Council: <strong className="text-slate-200">Punjab Medical Council (PMC)</strong></div>
             <div>Registration No: <strong className="text-emerald-400">{DOCTOR_REG_NO}</strong></div>
             <div>Certifications: <strong className="text-slate-200">CTH® (ISTM), FIAP</strong></div>
@@ -61,7 +61,7 @@ export function Footer() {
             </li>
             <li>
               <Link to="/about-dr-gupta" className="hover:text-emerald-400 transition-colors">
-                About Dr. Gaurav Gupta, MD, CTH®
+                About Dr. Gaurav Gupta, DCH, DNB, CTH®
               </Link>
             </li>
           </ul>
@@ -73,7 +73,7 @@ export function Footer() {
           <div className="space-y-2 text-xs">
             <div className="flex items-start gap-2">
               <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-              <span>Charak Clinics, SCO 5, Sector 69, SAS Nagar (Mohali), Punjab 160062</span>
+              <span>Charak Clinics, SCF 30, Phase 3B2, Sector 60, SAS Nagar (Mohali), Punjab 160059</span>
             </div>
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-emerald-400 shrink-0" />

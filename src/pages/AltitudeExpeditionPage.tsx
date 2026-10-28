@@ -38,7 +38,7 @@ export function AltitudeExpeditionPage() {
           </h1>
 
           <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-1 border-b border-white/10 pb-4">
-            <span><strong>Written & Medically Reviewed by:</strong> Dr. Gaurav Gupta, MD (Pediatrics), CTH® (ISTM)</span>
+            <span><strong>Written & Medically Reviewed by:</strong> Dr. Gaurav Gupta, DCH, DNB (Pediatrics), CTH® (ISTM)</span>
             <span>•</span>
             <span><strong>Punjab Medical Council Reg No:</strong> {DOCTOR_REG_NO}</span>
             <span>•</span>

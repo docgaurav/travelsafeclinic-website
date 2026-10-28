@@ -37,11 +37,11 @@ export function Navbar() {
           <div className="flex items-center gap-2">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="font-medium text-[11px] sm:text-xs">
-              Dr. Gaurav Gupta, MD, CTH® (ISTM) • Punjab Medical Council Reg: {DOCTOR_REG_NO} • Video Consult: {VIDEO_CONSULT_FEE}
+              Dr. Gaurav Gupta, DCH, DNB, CTH® (ISTM) • Punjab Medical Council Reg: {DOCTOR_REG_NO} • Video Consult: {VIDEO_CONSULT_FEE}
             </span>
           </div>
           <div className="hidden md:flex items-center gap-5 text-slate-300 text-xs">
-            <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-emerald-400" /> Sector 69, Mohali</span>
+            <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-emerald-400" /> Phase 3B2, Mohali</span>
             <a href={`tel:${CLINIC_PHONE}`} className="flex items-center gap-1.5 hover:text-white transition-colors">
               <Phone className="w-3.5 h-3.5 text-emerald-400" /> Reception: {CLINIC_PHONE}
             </a>

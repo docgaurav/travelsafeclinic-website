@@ -38,7 +38,7 @@ export function AdultVaccinesPage() {
           </h1>
 
           <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-1 border-b border-white/10 pb-4">
-            <span><strong>Written & Medically Reviewed by:</strong> Dr. Gaurav Gupta, MD (Pediatrics), CTH® (ISTM)</span>
+            <span><strong>Written & Medically Reviewed by:</strong> Dr. Gaurav Gupta, DCH, DNB (Pediatrics), CTH® (ISTM)</span>
             <span>•</span>
             <span><strong>Punjab Medical Council Reg No:</strong> {DOCTOR_REG_NO}</span>
             <span>•</span>
@@ -69,7 +69,7 @@ export function AdultVaccinesPage() {
             <div>
               <h3 className="text-base font-bold text-white">The Invisible Shield</h3>
               <p className="text-xs text-amber-400">An Adult’s Guide to Vaccines</p>
-              <p className="text-[11px] text-slate-400 mt-1">By Dr. Gaurav Gupta, MD</p>
+              <p className="text-[11px] text-slate-400 mt-1">By Dr. Gaurav Gupta, DCH, DNB</p>
             </div>
             <button
               onClick={() => sendWhatsApp()}

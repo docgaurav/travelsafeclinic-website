@@ -44,8 +44,8 @@ export const VIDEO_EPISODES: VideoEpisode[] = [
   },
   {
     id: "cold-chain",
-    title: "Cold-Chain Integrity: Inside the 4.2°C Biologics Vault",
-    subtitle: "Why WHO-grade continuous digital temperature logging guarantees vaccine potency",
+    title: "Cold-Chain Integrity: Inside Our Vaccine Refrigerator",
+    subtitle: "Ice-lined storage with a 50-hour power-cut holdover and a logged temperature record",
     duration: "03:15",
     seconds: 195,
     poster: "/images/video-cold-chain-integrity.jpg",
@@ -54,13 +54,13 @@ export const VIDEO_EPISODES: VideoEpisode[] = [
     chapters: [
       { time: "00:00", title: "The Hidden Danger of Spoiled Vaccines", sec: 0 },
       { time: "00:50", title: "The 2°C to 8°C Biologics Window Explained", sec: 50 },
-      { time: "01:40", title: "Continuous Digital Data Loggers & Cloud Alerting", sec: 100 },
+      { time: "01:40", title: "Temperature Logged Every 5 Minutes, Downloadable Record", sec: 100 },
       { time: "02:35", title: "Why Retail Pharmacy Counter Storage Often Fails", sec: 155 }
     ],
     takeaways: [
       "Rabies, Yellow Fever, Shingrix, and Gardasil 9 are delicate proteins that lose immunogenic potency if exposed to temperature excursions.",
       "Standard pharmacy domestic refrigerators suffer frequent thermal cycling and freeze-thaw damage.",
-      "TravelSafe Clinic operates calibrated medical cold-storage chambers with unbroken continuous monitoring."
+      "TravelSafe Clinic stores vaccines in an ice-lined refrigerator that holds its temperature for about 50 hours without electricity, and records it every 5 minutes in an electronic log that can be downloaded."
     ],
     ctaMessage: "Hello TravelSafe Clinic, I want to inquire about verified cold-chain vaccine availability for my upcoming travel."
   },
@@ -394,7 +394,7 @@ export function VideoStudio() {
               <div className="space-y-2">
                 <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Physician Clinical Briefing</div>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  {activeVideo.subtitle}. Led by Dr. Gaurav Gupta, MD (Pediatrics), CTH® (International Society of Travel Medicine).
+                  {activeVideo.subtitle}. Led by Dr. Gaurav Gupta, DCH, DNB (Pediatrics), CTH® (International Society of Travel Medicine).
                 </p>
               </div>
 
@@ -412,17 +412,6 @@ export function VideoStudio() {
 
               <div className="flex items-center justify-between pt-2">
                 <span className="text-xs text-slate-400">Teleconsultation: <strong className="text-white">{VIDEO_CONSULT_FEE}</strong></span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsTheatreOpen(false);
-                    sendWhatsApp(activeVideo.ctaMessage);
-                  }}
-                  className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-colors flex items-center gap-2"
-                >
-                  <MessageCircle className="w-3.5 h-3.5 fill-slate-950" />
-                  <span>WhatsApp Staff</span>
-                </button>
               </div>
             </div>
           </div>

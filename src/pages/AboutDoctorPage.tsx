@@ -33,7 +33,7 @@ export function AboutDoctorPage() {
               <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-2xl overflow-hidden border-2 border-emerald-400/40 shadow-2xl shadow-emerald-500/10">
                 <img 
                   src="/images/dr-gaurav-gupta.jpg" 
-                  alt="Dr. Gaurav Gupta, MD, CTH®"
+                  alt="Dr. Gaurav Gupta, DCH, DNB, CTH®"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -46,13 +46,13 @@ export function AboutDoctorPage() {
               </div>
 
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Dr. Gaurav Gupta, MD (Pediatrics), CTH®
+                Dr. Gaurav Gupta, DCH, DNB (Pediatrics), CTH®
               </h1>
 
               <div className="text-xs text-slate-300 space-y-1">
                 <div><strong>State Medical Council:</strong> Punjab Medical Council (PMC)</div>
                 <div><strong>Registration Number:</strong> <span className="text-emerald-400 font-mono font-bold">{DOCTOR_REG_NO}</span></div>
-                <div><strong>Primary Practice Facility:</strong> Charak Clinics, SCO 5, Sector 69, SAS Nagar (Mohali), Punjab 160062</div>
+                <div><strong>Primary Practice Facility:</strong> Charak Clinics, SCF 30, Phase 3B2, Sector 60, SAS Nagar (Mohali), Punjab 160059</div>
               </div>
 
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
