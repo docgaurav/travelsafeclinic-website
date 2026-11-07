@@ -9,7 +9,7 @@ export const CLINIC_WHATSAPP = "919653010203";
 export const CLINIC_PHONE = "+918010777722";
 export const CLINIC_EMAIL = "charakclinics@gmail.com";
 export const VIDEO_CONSULT_FEE = "INR 1,000";
-export const DOCTOR_REG_NO = "PMC 33261";
+export const DOCTOR_REG_NO = "PMC 39465";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
