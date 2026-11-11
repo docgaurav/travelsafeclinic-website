@@ -13,7 +13,7 @@ export function AltitudeExpeditionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070d18] text-slate-100">
+    <div className="min-h-screen theme-light">
       
       {/* Breadcrumb Navigation */}
       <div className="bg-[#0a1222] border-b border-white/5 py-3 px-4 sm:px-6">

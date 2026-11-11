@@ -25,9 +25,9 @@ function ScrollToTop() {
 function NotFound() {
   return (
     <section className="max-w-2xl mx-auto px-4 py-32 text-center">
-      <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Page not found</h1>
-      <p className="mt-4 text-slate-400">The page you are looking for does not exist or has moved.</p>
-      <Link to="/" className="inline-block mt-8 px-6 py-3 rounded-xl bg-emerald-500 text-slate-950 font-bold">
+      <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900">Page not found</h1>
+      <p className="mt-4 text-slate-600">The page you are looking for does not exist or has moved.</p>
+      <Link to="/" className="inline-block mt-8 px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold transition-colors">
         Back to home
       </Link>
     </section>
@@ -37,7 +37,7 @@ function NotFound() {
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-[#070d18] text-slate-100 font-sans selection:bg-emerald-500 selection:text-slate-950 flex flex-col justify-between">
+      <div className="min-h-screen bg-[#fcfdfd] text-slate-800 font-sans selection:bg-teal-500 selection:text-white flex flex-col justify-between">
         <ScrollToTop />
         <RouteSeo />
         <Navbar />

@@ -1,189 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
-  Globe2, ShieldCheck, Clock, ArrowRight, MessageCircle, 
-  MapPin, Phone, Award, Compass, Bug, Mountain, Droplet, 
-  Stethoscope, CheckCircle2, ShieldAlert, BookOpen, ChevronDown, ChevronUp, Sliders, Play
+  ShieldCheck, Clock, ArrowRight, MessageCircle, 
+  Award, BookOpen, ChevronDown, ChevronUp, Sliders,
+  CheckCircle2, GraduationCap, HeartHandshake, Compass, ShieldAlert
 } from "lucide-react";
-import { VideoStudio } from "../components/VideoStudio";
 import { Calculator } from "../components/Calculator";
 import { ClinicGallery } from "../components/ClinicGallery";
 import { BookingSection } from "../components/BookingSection";
-import { CLINIC_WHATSAPP, CLINIC_PHONE, VIDEO_CONSULT_FEE, DOCTOR_REG_NO } from "../components/Navbar";
-
-interface DestinationProfile {
-  name: string;
-  flag: string;
-  category: string;
-  urgencyBadge: string;
-  vectorRisk: "None" | "Low" | "Moderate" | "High";
-  altitudeRisk: "None" | "Extreme";
-  waterborneRisk: "Low" | "High";
-  entryMandate: string;
-  keyVaccines: string[];
-  medicalKit: string;
-  expertAdvisory: string;
-}
-
-const DESTINATIONS: Record<string, DestinationProfile> = {
-  "USA / Canada / UK": {
-    name: "USA, Canada & United Kingdom",
-    flag: "🎓",
-    category: "University & Work Clearance",
-    urgencyBadge: "Document Audit Required",
-    vectorRisk: "None",
-    altitudeRisk: "None",
-    waterborneRisk: "Low",
-    entryMandate: "Mandatory University Immunization Form & TB Screening",
-    keyVaccines: ["MenACWY & MenB (Bexsero)", "MMR & Varicella Titers", "Tdap Booster", "QuantiFERON-TB Gold Plus (IGRA)"],
-    medicalKit: "Personal prescription medications with doctor attestation letter, certified copy of immunization transcripts.",
-    expertAdvisory: "Most US universities require MenACWY within 5 years of matriculation and strict Serogroup B compliance. Infant BCG history requires IGRA blood test to bypass false-positive chest X-rays."
-  },
-  "Kenya & East Africa Safari": {
-    name: "Kenya, Tanzania & East Africa",
-    flag: "🦁",
-    category: "Wildlife & Safari Travel",
-    urgencyBadge: "Border Regulations Active",
-    vectorRisk: "High",
-    altitudeRisk: "None",
-    waterborneRisk: "High",
-    entryMandate: "Yellow Fever transit card & Malaria chemoprophylaxis",
-    keyVaccines: ["Typhoid Conjugate (TCV)", "Hepatitis A & B", "Rabies Pre-Exposure (PrEP)", "Polio Booster (IPV)"],
-    medicalKit: "Atovaquone-Proguanil (Malarone) or Doxycycline, 30% DEET insect repellent, Azithromycin emergency diarrhea course.",
-    expertAdvisory: "Official Yellow Fever cards in Punjab are issued at Civil Hospital Phase 6 Mohali. We provide clinical pre-screening, contraindication waivers, and administer co-scheduled typhoid and rabies vaccines."
-  },
-  "Ladakh & Everest Base Camp": {
-    name: "Himalayas (Ladakh, EBC, Kilimanjaro)",
-    flag: "🏔️",
-    category: "High Altitude & Remote Expedition",
-    urgencyBadge: "Hypoxia Pre-Screening",
-    vectorRisk: "None",
-    altitudeRisk: "Extreme",
-    waterborneRisk: "High",
-    entryMandate: "Medical Fitness & Emergency High Altitude Kit",
-    keyVaccines: ["Tetanus/Tdap", "Hepatitis A", "Typhoid", "Influenza"],
-    medicalKit: "Acetazolamide (Diamox 125mg/250mg), Dexamethasone 4mg standby, Fingertip Pulse Oximeter, Chlorine dioxide purification tablets.",
-    expertAdvisory: "Ascending over 3,000m requires scheduled Diamox prophylaxis started 24 hours prior to ascent. Never push higher with unresolving morning headache or resting pulse oximetry below 75%."
-  },
-  "Thailand & Southeast Asia": {
-    name: "Thailand, Vietnam & Bali",
-    flag: "🏝️",
-    category: "Tropical Leisure & Backpacking",
-    urgencyBadge: "Vector & Animal Bite Alert",
-    vectorRisk: "High",
-    altitudeRisk: "None",
-    waterborneRisk: "High",
-    entryMandate: "Routine border clearance; Rabies bite protocol",
-    keyVaccines: ["Hepatitis A & Typhoid (TCV)", "Rabies Pre-Exposure (PrEP)", "Japanese Encephalitis", "Tdap"],
-    medicalKit: "Picaridin or DEET repellent (daytime Dengue mosquito prevention), Oral Rehydration Salts (ORS), Loperamide + Ciprofloxacin.",
-    expertAdvisory: "Monkeys at Bali and Phuket temples and street dogs carry severe rabies risk. A 2-dose pre-exposure rabies vaccine simplifies emergency post-exposure management dramatically."
-  },
-  "Saudi Arabia (Hajj & Umrah)": {
-    name: "Saudi Arabia (Mecca & Medina)",
-    flag: "🕋",
-    category: "Pilgrimage / Mass Gathering",
-    urgencyBadge: "Mandatory Visa Rule",
-    vectorRisk: "Low",
-    altitudeRisk: "None",
-    waterborneRisk: "Low",
-    entryMandate: "Quadrivalent Meningococcal ACWY Stamped Certificate (within 3 yrs)",
-    keyVaccines: ["Quadrivalent Meningococcal ACWY", "Seasonal Influenza", "Pneumococcal (PCV20 for age 50+)"],
-    medicalKit: "Hydration electrolytes, blister tape for long walks, broad spectrum throat lozenges and masks.",
-    expertAdvisory: "Saudi Ministry of Health requires ACWY certification issued no less than 10 days before arrival. Seniors with diabetes or respiratory conditions must receive pneumococcal protection."
-  },
-  "Visiting India (Inbound Partner)": {
-    name: "India (Foreign Tourists & Expats)",
-    flag: "🇮🇳",
-    category: "Inbound International Travel",
-    urgencyBadge: "Food & Water Acclimatization",
-    vectorRisk: "Moderate",
-    altitudeRisk: "None",
-    waterborneRisk: "High",
-    entryMandate: "Routine visa; Enteric fever protection",
-    keyVaccines: ["Hepatitis A & Typhoid Conjugate", "Rabies Pre-Exposure (PrEP)", "Tdap Booster", "Polio Booster"],
-    medicalKit: "Pepto-Bismol / bismuth subsalicylate, Azithromycin 500mg (prescribed), Hand sanitizer, Electrolytes.",
-    expertAdvisory: "Avoid raw salads and street tap water. Start Typhoid Conjugate Vaccine (TCV) at least 14 days before landing in India for robust enteric protection."
-  }
-};
+import { CLINIC_WHATSAPP, VIDEO_CONSULT_FEE, DOCTOR_REG_NO } from "../components/Navbar";
 
 export function HomePage() {
-  const [selectedDestinationKey, setSelectedDestinationKey] = useState<string>("USA / Canada / UK");
   const [adultMatrixTab, setAdultMatrixTab] = useState<"shingrix" | "pcv20" | "tdap" | "gardasil">("shingrix");
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const selectedDest = DESTINATIONS[selectedDestinationKey];
-
-  // Canvas particle / flight trajectory dynamics
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animationFrameId: number;
-    let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
-    let height = (canvas.height = canvas.parentElement?.clientHeight || 650);
-
-    const handleResize = () => {
-      if (!canvas || !canvas.parentElement) return;
-      width = canvas.width = canvas.parentElement.clientWidth;
-      height = canvas.height = canvas.parentElement.clientHeight;
-    };
-    window.addEventListener("resize", handleResize);
-
-    const points = Array.from({ length: 26 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      radius: Math.random() * 2 + 1,
-    }));
-
-    const render = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      for (let i = 0; i < points.length; i++) {
-        for (let j = i + 1; j < points.length; j++) {
-          const dx = points[i].x - points[j].x;
-          const dy = points[i].y - points[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
-            ctx.beginPath();
-            ctx.moveTo(points[i].x, points[i].y);
-            ctx.lineTo(points[j].x, points[j].y);
-            ctx.strokeStyle = `rgba(16, 185, 129, ${0.16 * (1 - dist / 150)})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-
-      points.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(16, 185, 129, 0.55)";
-        ctx.shadowColor = "rgba(16, 185, 129, 0.8)";
-        ctx.shadowBlur = 5;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-
-    render();
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const sendWhatsApp = (customMsg?: string) => {
     const text = customMsg || `Hello TravelSafe Clinic team, I would like to book a Video Consultation (${VIDEO_CONSULT_FEE}) with Dr. Gaurav Gupta. Please share available appointment slots.`;
@@ -193,108 +22,109 @@ export function HomePage() {
   return (
     <div className="space-y-0 overflow-x-hidden">
       
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28">
-        <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none opacity-40 z-0" />
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+      {/* 1. Warm, Reassuring Clinical Hero */}
+      <section className="bg-gradient-to-b from-teal-50/60 via-white to-white pt-10 pb-16 md:pt-16 md:pb-24 border-b border-slate-200/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold backdrop-blur-md">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>ISTM Certified Travel Medicine Practice • Punjab Medical Council Reg: {DOCTOR_REG_NO}</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold shadow-xs">
+                <ShieldCheck className="w-4 h-4 text-teal-600" />
+                <span>ISTM Certified Travel Medicine • Punjab Medical Council: {DOCTOR_REG_NO}</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
-                Cross-Border Medical Clearance & Travel Health. <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Clinical Rigor First.</span>
+              <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
+                Travel Health & Adult Vaccines.{" "}
+                <span className="text-teal-700">Clear, Caring & Evidence-Based.</span>
               </h1>
 
-              <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
-                Structured pre-travel medical evaluations, international university immunization clearance, cold-chain vaccine administration, altitude sickness prophylaxis, and adult immunology by <strong className="text-white font-semibold">Dr. Gaurav Gupta, DCH, DNB, CTH®</strong>.
+              <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl">
+                Dedicated pre-travel guidance, university immunization clearances, and adult preventive vaccines led by{" "}
+                <strong className="text-slate-900 font-semibold">Dr. Gaurav Gupta, DCH, DNB, CTH®</strong> at Charak Clinics, Mohali.
               </p>
 
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <a
-                  href="#calculator"
-                  className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold text-xs shadow-xl shadow-emerald-500/25 hover:from-emerald-400 hover:to-teal-400 transition-all flex items-center gap-2"
+                  href="#booking"
+                  className="px-6 py-3.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-teal-600/20 transition-all flex items-center gap-2"
                 >
-                  <Sliders className="w-4 h-4" />
-                  <span>Launch Timeline Calculator</span>
+                  <span>Book Consultation ({VIDEO_CONSULT_FEE})</span>
+                  <ArrowRight className="w-4 h-4" />
                 </a>
 
-                <a
-                  href="#video-studio"
-                  className="px-6 py-3.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-white font-semibold text-xs border border-white/10 transition-colors flex items-center gap-2"
+                <button
+                  type="button"
+                  onClick={() => sendWhatsApp()}
+                  className="px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-sm transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <Play className="w-4 h-4 text-emerald-400 fill-emerald-400" />
-                  <span>Watch Clinical Videos (4)</span>
-                </a>
+                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <span>Message Staff on WhatsApp</span>
+                </button>
               </div>
 
-              {/* Factual Aggregate Trust Metrics (NMC Compliant) */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-white/10">
-                <div className="bg-white/[0.03] p-3 rounded-xl border border-white/5">
-                  <div className="text-xl font-bold text-white">30+</div>
-                  <div className="text-[11px] text-slate-400">Years Clinical Practice</div>
+              {/* Clean Clinical Trust Metrics */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-slate-200">
+                <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
+                  <div className="text-xl font-extrabold text-slate-900">30+ Yrs</div>
+                  <div className="text-[11px] text-slate-500 font-medium">Clinical Experience</div>
                 </div>
-                <div className="bg-white/[0.03] p-3 rounded-xl border border-white/5">
-                  <div className="text-xl font-bold text-emerald-400">50 hrs</div>
-                  <div className="text-[11px] text-slate-400">Vaccine fridge holdover without power</div>
+                <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
+                  <div className="text-xl font-extrabold text-teal-700">50 hrs</div>
+                  <div className="text-[11px] text-slate-500 font-medium">Cold-chain power holdover</div>
                 </div>
-                <div className="bg-white/[0.03] p-3 rounded-xl border border-white/5">
-                  <div className="text-xl font-bold text-cyan-400">{VIDEO_CONSULT_FEE}</div>
-                  <div className="text-[11px] text-slate-400">Video Teleconsultation</div>
+                <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
+                  <div className="text-xl font-extrabold text-slate-900">{VIDEO_CONSULT_FEE}</div>
+                  <div className="text-[11px] text-slate-500 font-medium">Video Teleconsultation</div>
                 </div>
-                <div className="bg-white/[0.03] p-3 rounded-xl border border-white/5">
-                  <div className="text-xl font-bold text-amber-400">CTH®</div>
-                  <div className="text-[11px] text-slate-400">ISTM Certified Specialist</div>
+                <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
+                  <div className="text-xl font-extrabold text-emerald-700">CTH®</div>
+                  <div className="text-[11px] text-slate-500 font-medium">ISTM Travel Specialist</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Physician Spotlight */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative mx-auto max-w-md rounded-2xl overflow-hidden border border-white/15 bg-slate-900/90 shadow-2xl shadow-emerald-500/10">
-                <div className="relative aspect-[4/3] overflow-hidden">
+            {/* Physician Spotlight Card */}
+            <div className="lg:col-span-5">
+              <div className="mx-auto max-w-md rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-xl">
+                <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
                   <img 
-                    src="/images/student-abroad-departure.jpg" 
-                    alt="University student preparing international immunization clearance forms" 
+                    src="/images/clinic/clinic-front.webp" 
+                    alt="Charak Clinics & TravelSafe Clinic in Phase 3B2, Mohali" 
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a1222] via-[#0a1222]/30 to-transparent"></div>
-                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-emerald-500/90 text-slate-950 font-bold text-xs shadow">
-                    Verified Protocol
+                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/95 text-teal-800 font-bold text-xs shadow-sm border border-teal-100">
+                    Charak Clinics • Mohali
                   </div>
                 </div>
 
                 <div className="p-6 space-y-4">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3.5">
                     <img 
                       src="/images/dr-gaurav-gupta.jpg" 
                       alt="Dr. Gaurav Gupta, DCH, DNB, CTH®" 
-                      className="w-12 h-12 rounded-full object-cover ring-2 ring-emerald-400/50"
+                      className="w-14 h-14 rounded-full object-cover ring-2 ring-teal-500/30 shadow-xs"
                     />
                     <div>
-                      <div className="font-bold text-white text-base">Dr. Gaurav Gupta, DCH, DNB</div>
-                      <div className="text-xs text-emerald-400 font-medium">ISTM Certified Travel Health Specialist</div>
+                      <div className="font-bold text-slate-900 text-base">Dr. Gaurav Gupta, DCH, DNB</div>
+                      <div className="text-xs text-teal-700 font-semibold">ISTM Certified Travel Health Specialist</div>
+                      <div className="text-[11px] text-slate-500">Reg: {DOCTOR_REG_NO}</div>
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    "Pre-travel health is preventive clinical medicine. From decoding university forms and TB IGRA testing to administering temperature-monitored biologics, our protocols ensure evidence-based compliance."
+                  <p className="text-xs text-slate-600 leading-relaxed italic border-l-2 border-teal-500 pl-3">
+                    "Whether you are a grandparent flying to meet a new grandchild, a student preparing university forms, or traveling for a holiday, we make travel protection simple and safe."
                   </p>
 
-                  <div className="pt-2 flex items-center justify-between text-xs border-t border-white/10">
-                    <span className="text-slate-400 flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-emerald-400" />
-                      Mon - Sat · 10:30-2, 4:30-7
+                  <div className="pt-3 flex items-center justify-between text-xs border-t border-slate-100">
+                    <span className="text-slate-500 flex items-center gap-1.5 font-medium">
+                      <Clock className="w-3.5 h-3.5 text-teal-600" />
+                      Mon – Sat • 10:30–2, 4:30–7
                     </span>
                     <Link 
                       to="/about-dr-gupta"
-                      className="text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1"
+                      className="text-teal-700 hover:text-teal-800 font-bold flex items-center gap-1"
                     >
-                      <span>Physician Profile</span>
+                      <span>Doctor Profile</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
@@ -306,209 +136,215 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Feature 1: Clinical Video Studio */}
-      <VideoStudio />
-
-      {/* Feature 2: Interactive Departure Calculator */}
-      <Calculator />
-
-      <ClinicGallery />
-
-      {/* Feature 3: Destination Health Threat Radar */}
-      <section id="radar" className="py-24 md:py-32 bg-[#09111e] border-t border-white/5 relative">
+      {/* 2. Who We Help: 3 Clear Patient Personas */}
+      <section className="py-20 md:py-28 bg-slate-50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs font-semibold">
-              <Compass className="w-3.5 h-3.5 text-blue-400" />
-              <span>Destination Intelligence</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Destination Health Threat Radar
+          <div className="text-center max-w-2xl mx-auto space-y-2 mb-14">
+            <span className="text-xs font-bold tracking-widest text-teal-700 uppercase">Tailored Clinical Care</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Who Visits TravelSafe Clinic?
             </h2>
-            <p className="text-slate-300 text-sm sm:text-base">
-              Select your travel destination to inspect vector activity, altitude strain, mandatory border certificates, and medical kit recommendations.
+            <p className="text-slate-600 text-sm sm:text-base">
+              We focus on three distinct types of travelers and their families, keeping guidance clear and practical.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
-            {Object.keys(DESTINATIONS).map((key) => {
-              const dest = DESTINATIONS[key];
-              const isSelected = key === selectedDestinationKey;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setSelectedDestinationKey(key)}
-                  className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border ${
-                    isSelected
-                      ? "bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/20 scale-105"
-                      : "bg-slate-900/80 text-slate-300 border-white/10 hover:border-white/20 hover:bg-slate-800"
-                  }`}
-                >
-                  <span className="text-base">{dest.flag}</span>
-                  <span>{key}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="bg-slate-900/90 border border-white/15 rounded-2xl p-6 sm:p-8 shadow-2xl">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              <div className="lg:col-span-7 space-y-6">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <div>
-                    <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">{selectedDest.category}</span>
-                    <h3 className="text-2xl font-bold text-white flex items-center gap-2 mt-0.5">
-                      <span>{selectedDest.flag}</span>
-                      <span>{selectedDest.name}</span>
-                    </h3>
-                  </div>
-                  <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold">
-                    {selectedDest.urgencyBadge}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  <div className="bg-slate-950/80 p-3.5 rounded-xl border border-white/5 space-y-1">
-                    <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
-                      <Bug className="w-3.5 h-3.5 text-amber-400" />
-                      Vector / Malaria
-                    </div>
-                    <div className={`text-sm font-bold ${selectedDest.vectorRisk === "High" ? "text-red-400" : selectedDest.vectorRisk === "Moderate" ? "text-amber-400" : "text-emerald-400"}`}>
-                      {selectedDest.vectorRisk} Risk
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-950/80 p-3.5 rounded-xl border border-white/5 space-y-1">
-                    <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
-                      <Mountain className="w-3.5 h-3.5 text-cyan-400" />
-                      Altitude (AMS)
-                    </div>
-                    <div className={`text-sm font-bold ${selectedDest.altitudeRisk === "Extreme" ? "text-cyan-400" : "text-slate-400"}`}>
-                      {selectedDest.altitudeRisk} Risk
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-950/80 p-3.5 rounded-xl border border-white/5 space-y-1">
-                    <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
-                      <Droplet className="w-3.5 h-3.5 text-blue-400" />
-                      Waterborne / Enteric
-                    </div>
-                    <div className={`text-sm font-bold ${selectedDest.waterborneRisk === "High" ? "text-amber-400" : "text-emerald-400"}`}>
-                      {selectedDest.waterborneRisk} Risk
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-start gap-3">
-                  <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                  <div>
-                    <div className="text-xs font-bold text-amber-300">Border Entry & Institutional Requirement</div>
-                    <div className="text-xs text-slate-300 mt-0.5">{selectedDest.entryMandate}</div>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <div className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                    <Stethoscope className="w-4 h-4 text-emerald-400" />
-                    Clinical Guidance by Dr. Gaurav Gupta
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed bg-slate-950/40 p-4 rounded-xl border border-white/5">
-                    {selectedDest.expertAdvisory}
-                  </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* Persona 1: Grandparents & Seniors */}
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
+              <div className="aspect-[16/10] bg-slate-100 overflow-hidden relative">
+                <img 
+                  src="/images/partner-travel-india.jpg" 
+                  alt="Senior couple traveling abroad to visit family" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 text-slate-800 text-[11px] font-bold shadow-xs flex items-center gap-1.5">
+                  <HeartHandshake className="w-3.5 h-3.5 text-teal-600" />
+                  <span>USA • Canada • UK • Australia</span>
                 </div>
               </div>
-
-              <div className="lg:col-span-5 bg-slate-950/70 border border-white/10 rounded-xl p-6 space-y-5">
-                <div>
-                  <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Required & Recommended Biologics</div>
-                  <ul className="mt-3 space-y-2">
-                    {selectedDest.keyVaccines.map((vax, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-xs text-slate-200">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                        <span className="font-medium">{vax}</span>
-                      </li>
-                    ))}
+              <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
+                <div className="space-y-3">
+                  <h3 className="text-xl font-bold text-slate-900">
+                    Grandparents Visiting Family Abroad
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Flying overseas to visit children or welcome a newborn grandchild? Protect yourself and your family before a long flight.
+                  </p>
+                  <ul className="space-y-1.5 text-xs text-slate-700 pt-1">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                      <span><strong>Tdap (Boostrix)</strong> cocooning shot before holding newborns</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                      <span><strong>Shingrix & Prevnar 20</strong> for shingles & pneumonia defense</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                      <span>Airport customs medical letters for heart/diabetes prescriptions</span>
+                    </li>
                   </ul>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => sendWhatsApp("Hello TravelSafe Clinic, I am a grandparent/senior planning travel abroad to visit family and would like to book a pre-travel consultation.")}
+                  className="w-full py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold text-xs border border-teal-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <span>Book Senior Travel Review</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
 
-                <div className="border-t border-white/10 pt-4 space-y-2">
-                  <div className="text-xs font-bold text-teal-400 uppercase tracking-wider">Prescribed Medical Travel Kit</div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    {selectedDest.medicalKit}
-                  </p>
-                </div>
-
-                <div className="border-t border-white/10 pt-4 space-y-3">
-                  <button
-                    type="button"
-                    onClick={() => sendWhatsApp(`Hello TravelSafe Clinic, I am traveling to ${selectedDest.name} and would like to schedule a Video Consultation (${VIDEO_CONSULT_FEE}) for pre-travel vaccinations and medical clearance.`)}
-                    className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-colors flex items-center justify-center gap-2"
-                  >
-                    <MessageCircle className="w-4 h-4 fill-slate-950" />
-                    <span>WhatsApp Staff</span>
-                  </button>
+            {/* Persona 2: Students Going Abroad */}
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
+              <div className="aspect-[16/10] bg-slate-100 overflow-hidden relative">
+                <img 
+                  src="/images/student-abroad-departure.jpg" 
+                  alt="University student preparing immunization forms" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 text-slate-800 text-[11px] font-bold shadow-xs flex items-center gap-1.5">
+                  <GraduationCap className="w-3.5 h-3.5 text-teal-600" />
+                  <span>University Clearances</span>
                 </div>
               </div>
-
+              <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
+                <div className="space-y-3">
+                  <h3 className="text-xl font-bold text-slate-900">
+                    Students Going to Foreign Universities
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Avoid registration holds or expensive vaccines abroad. We decode, test, vaccinate, and sign your university health forms in Mohali.
+                  </p>
+                  <ul className="space-y-1.5 text-xs text-slate-700 pt-1">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                      <span><strong>QuantiFERON-TB Gold (IGRA)</strong> blood test (avoids BCG false positives)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                      <span><strong>MMR & Varicella titers</strong> plus Meningitis ACWY & MenB</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                      <span>Official physician audit, seal, and license stamp</span>
+                    </li>
+                  </ul>
+                </div>
+                <Link
+                  to="/university-immunization-form"
+                  className="w-full py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+                >
+                  <span>Student Immunization Guide</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
-          </div>
 
+            {/* Persona 3: Holidays, Safaris, Pilgrimage & Business */}
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
+              <div className="aspect-[16/10] bg-slate-100 overflow-hidden relative">
+                <img 
+                  src="/images/himalayan-trekker.jpg" 
+                  alt="Traveler hiking in high altitude mountains" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 text-slate-800 text-[11px] font-bold shadow-xs flex items-center gap-1.5">
+                  <Compass className="w-3.5 h-3.5 text-teal-600" />
+                  <span>Vacations, Treks & Pilgrimage</span>
+                </div>
+              </div>
+              <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
+                <div className="space-y-3">
+                  <h3 className="text-xl font-bold text-slate-900">
+                    Leisure, Conferences, Safaris & Pilgrimage
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Targeted vaccines and travel medical kits whether you are heading to Southeast Asia, Kenya, Saudi Arabia, or Ladakh.
+                  </p>
+                  <ul className="space-y-1.5 text-xs text-slate-700 pt-1">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                      <span><strong>Safaris & Asia:</strong> Typhoid, Hep A, Rabies, & Malaria pills</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                      <span><strong>Hajj & Umrah:</strong> Certified Meningococcal ACWY visa card</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                      <span><strong>High Altitude:</strong> Prescribed Diamox & oximetry protocols</span>
+                    </li>
+                  </ul>
+                </div>
+                <a
+                  href="#calculator"
+                  className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-200 transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <Sliders className="w-3.5 h-3.5" />
+                  <span>Check Destination Timeline</span>
+                </a>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
-      {/* Feature 4: The Invisible Shield & Adult Vaccines */}
-      <section id="invisible-shield" className="theme-warm py-24 md:py-32 bg-[#070d18] relative">
+      {/* 3. Adult Vaccines & "The Invisible Shield" Book */}
+      <section id="invisible-shield" className="py-20 md:py-28 bg-[#faf6ee] border-t border-amber-200/60 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold">
-              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
-              <span>Adult Immunization Authority</span>
+          <div className="text-center max-w-3xl mx-auto space-y-2 mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100/80 border border-amber-200 text-amber-900 text-xs font-semibold">
+              <BookOpen className="w-3.5 h-3.5 text-amber-700" />
+              <span>Adult Immunization Focus</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               The Invisible Shield: Modern Vaccines for Adults
             </h2>
-            <p className="text-slate-300 text-sm sm:text-base">
-              Childhood immunity wanes over time. Dr. Gaurav Gupta’s comprehensive guide details how modern adult vaccines defend against shingles, invasive pneumonia, whooping cough, and cancer.
+            <p className="text-slate-600 text-sm sm:text-base">
+              Childhood immunity fades over the years. Dr. Gaurav Gupta’s book explains how modern adult vaccines protect you from shingles, severe pneumonia, whooping cough, and preventable cancers.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-900/90 border border-white/15 rounded-2xl p-6 sm:p-10 shadow-2xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-md">
             
             <div className="lg:col-span-4 flex flex-col items-center text-center space-y-4">
-              <div className="relative group max-w-xs rounded-xl overflow-hidden shadow-2xl shadow-amber-500/10 border border-white/20">
+              <div className="max-w-[240px] rounded-xl overflow-hidden shadow-xl border border-slate-200">
                 <img 
                   src="/images/invisible-shield-cover.jpg" 
                   alt="The Invisible Shield: An Adult's Guide to Vaccines by Dr. Gaurav Gupta"
-                  className="w-full h-auto object-cover group-hover:scale-102 transition-transform duration-500"
+                  className="w-full h-auto object-cover"
                 />
               </div>
 
               <div className="space-y-1">
-                <h4 className="text-base font-bold text-white">The Invisible Shield</h4>
-                <p className="text-xs text-amber-400 font-medium">An Adult’s Guide to Vaccines • Dr. Gaurav Gupta</p>
+                <h4 className="text-base font-bold text-slate-900">The Invisible Shield</h4>
+                <p className="text-xs text-amber-700 font-semibold">An Adult’s Guide to Vaccines • By Dr. Gaurav Gupta</p>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-1">
                 <Link
                   to="/shingrix-adult-vaccines"
-                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs transition-colors inline-flex items-center gap-2 shadow-xs"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
-                  <span>Explore Adult Vaccine Guide</span>
+                  <span>Read Adult Vaccine Guide</span>
                 </Link>
               </div>
             </div>
 
             <div className="lg:col-span-8 space-y-6">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {[
                   { id: "shingrix", label: "Shingrix (Shingles)", sub: "Age 50+ & Diabetes" },
-                  { id: "pcv20", label: "Prevnar 20 (Lung)", sub: "1 Lifelong Dose" },
-                  { id: "tdap", label: "Boostrix (Tdap)", sub: "Cocooning Protection" },
+                  { id: "pcv20", label: "Prevnar 20 (Lung)", sub: "1 Single Dose" },
+                  { id: "tdap", label: "Boostrix (Tdap)", sub: "Grandparent Shield" },
                   { id: "gardasil", label: "Gardasil 9 (HPV)", sub: "Cancer Prevention" }
                 ].map((item) => {
                   const active = adultMatrixTab === item.id;
@@ -517,75 +353,75 @@ export function HomePage() {
                       key={item.id}
                       type="button"
                       onClick={() => setAdultMatrixTab(item.id as any)}
-                      className={`p-3 rounded-xl border text-left transition-all ${
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                         active 
-                          ? "bg-amber-500/20 border-amber-400 text-white shadow-md ring-1 ring-amber-400" 
-                          : "bg-slate-800/40 border-white/5 text-slate-300 hover:bg-slate-800"
+                          ? "bg-amber-50 border-amber-500 text-slate-900 shadow-xs ring-1 ring-amber-500" 
+                          : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                       }`}
                     >
-                      <div className="text-xs font-bold leading-tight">{item.label}</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">{item.sub}</div>
+                      <div className="text-xs font-bold leading-tight text-slate-900">{item.label}</div>
+                      <div className="text-[11px] text-slate-500 mt-0.5">{item.sub}</div>
                     </button>
                   );
                 })}
               </div>
 
-              <div className="bg-slate-950/70 border border-white/10 rounded-xl p-6 space-y-4">
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-4">
                 {adultMatrixTab === "shingrix" && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                      <div className="font-bold text-white text-sm">Shingrix (Recombinant Zoster Vaccine)</div>
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-bold">97%+ Efficacy</span>
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                      <div className="font-bold text-slate-900 text-base">Shingrix (Recombinant Zoster Vaccine)</div>
+                      <span className="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-bold">97%+ Efficacy</span>
                     </div>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      Protects against Shingles and agonizing postherpetic neuralgia. 2-dose series (0 and 2-6 months) for adults aged 50 and above.
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      1 in 3 adults develop Shingles in their lifetime. Shingrix offers over 97% protection against shingles and long-lasting postherpetic nerve pain. Recommended as a 2-dose series for adults 50+ or immunocompromised adults.
                     </p>
                   </div>
                 )}
 
                 {adultMatrixTab === "pcv20" && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                      <div className="font-bold text-white text-sm">Prevnar 20 (Pneumococcal 20-Valent Conjugate)</div>
-                      <span className="text-[10px] bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded font-bold">1 Single Dose</span>
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                      <div className="font-bold text-slate-900 text-base">Prevnar 20 (Pneumococcal 20-Valent Conjugate)</div>
+                      <span className="text-xs bg-teal-100 text-teal-800 px-2.5 py-0.5 rounded-full font-bold">1 Single Dose</span>
                     </div>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      Conjugate vaccine defending against invasive pneumococcal pneumonia and bacteremia in seniors, diabetics, and smokers.
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      Protects against 20 strains of severe pneumococcal pneumonia and bloodstream infections. Especially vital for seniors, travelers, people with diabetes, asthma, or heart disease.
                     </p>
                   </div>
                 )}
 
                 {adultMatrixTab === "tdap" && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                      <div className="font-bold text-white text-sm">Boostrix (Tdap: Tetanus, Diphtheria, Pertussis)</div>
-                      <span className="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-bold">Every 10 Years</span>
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                      <div className="font-bold text-slate-900 text-base">Boostrix (Tdap: Tetanus, Diphtheria, Pertussis)</div>
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full font-bold">Every 10 Years</span>
                     </div>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      Adult whooping cough immunity wanes every decade. Cocooning immunization shields newborn grandchildren from lethal pertussis.
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      Adult whooping cough immunity wears off every decade. Taking a Tdap booster forms a protective "cocoon" around newborn grandchildren who are too young to be fully vaccinated.
                     </p>
                   </div>
                 )}
 
                 {adultMatrixTab === "gardasil" && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                      <div className="font-bold text-white text-sm">Gardasil 9 (9-Valent HPV Vaccine)</div>
-                      <span className="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded font-bold">Cancer Shield</span>
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                      <div className="font-bold text-slate-900 text-base">Gardasil 9 (9-Valent HPV Vaccine)</div>
+                      <span className="text-xs bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-full font-bold">Cancer Shield</span>
                     </div>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      Defends women and men up to age 45 against 9 oncogenic HPV types causing cervical, anal, and head/neck cancers.
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      Protects both women and men up to age 45 against 9 high-risk HPV strains responsible for cervical, throat, and other preventable cancers.
                     </p>
                   </div>
                 )}
 
-                <div className="pt-2 border-t border-white/10 flex items-center justify-between">
-                  <span className="text-xs text-slate-400">Video Consult: <strong className="text-white">{VIDEO_CONSULT_FEE}</strong></span>
+                <div className="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs text-slate-600">Video Consultation: <strong className="text-slate-900">{VIDEO_CONSULT_FEE}</strong></span>
                   <Link
                     to="/shingrix-adult-vaccines"
-                    className="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1"
+                    className="text-xs text-amber-700 hover:text-amber-800 font-bold flex items-center gap-1"
                   >
-                    <span>Read Full Adult Vaccine Guide</span>
+                    <span>Explore All Adult Vaccines</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
@@ -593,108 +429,113 @@ export function HomePage() {
             </div>
 
           </div>
-
         </div>
       </section>
 
-      {/* Feature 5: Yellow Fever Punjab Center */}
-      <section id="yellow-fever" className="py-24 md:py-32 bg-[#09111e] border-t border-white/5 relative">
+      {/* 4. Interactive Departure Calculator */}
+      <Calculator />
+
+      {/* 5. Official Yellow Fever Protocol (Simple & Helpful) */}
+      <section id="yellow-fever" className="py-16 md:py-24 bg-slate-50 border-t border-slate-200 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-xs font-semibold">
-              <ShieldAlert className="w-3.5 h-3.5 text-yellow-400" />
-              <span>Official Regulatory Guidance</span>
+          <div className="text-center max-w-3xl mx-auto space-y-2 mb-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-100 border border-yellow-300 text-yellow-900 text-xs font-semibold">
+              <ShieldAlert className="w-3.5 h-3.5 text-yellow-700" />
+              <span>Honest Punjab Travel Guidance</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Yellow Fever Vaccination Card in Punjab: The Clear Protocol
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Need a Yellow Fever Card in Punjab?
             </h2>
-            <p className="text-slate-300 text-sm sm:text-base">
-              Under Government of India and WHO mandates, the official Yellow Card (ICVP) is strictly issued by designated government centers in Punjab: Civil Hospital, Phase 6, Mohali and AIIMS Bathinda.
+            <p className="text-slate-600 text-sm">
+              Save time by knowing where official Yellow Cards are issued—and what complementary care we provide right here in Phase 3B2, Mohali.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            <div className="bg-slate-900/90 border border-yellow-500/30 rounded-2xl p-6 sm:p-8 space-y-4 shadow-xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-3 shadow-xs">
               <div className="flex items-center justify-between">
-                <span className="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-300 text-xs font-bold">
-                  Official Issuing Authority
+                <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-900 text-xs font-bold">
+                  Official Government Center
                 </span>
-                <Award className="w-5 h-5 text-yellow-400" />
+                <Award className="w-5 h-5 text-yellow-600" />
               </div>
-              <h3 className="text-xl font-bold text-white">Civil Hospital, Phase 6, Mohali</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Designated by the Ministry of Health & Family Welfare (MoHFW). Operating Tuesdays and Thursdays (10:00 AM – 1:00 PM). Original passport mandatory.
+              <h3 className="text-lg font-bold text-slate-900">Civil Hospital, Phase 6, Mohali</h3>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Under Government of India rules, the official Yellow Fever International Certificate (ICVP) can only be issued by designated government centers (Civil Hospital Phase 6, Mohali & AIIMS Bathinda). Carry your original passport on Tuesdays and Thursdays (10:00 AM – 1:00 PM).
               </p>
               <div className="pt-2">
                 <Link
                   to="/yellow-fever-card-punjab"
-                  className="text-xs text-yellow-400 hover:text-yellow-300 font-semibold flex items-center gap-1"
+                  className="text-xs text-teal-700 hover:text-teal-800 font-bold inline-flex items-center gap-1"
                 >
-                  <span>Read Complete Punjab Yellow Fever Guide</span>
+                  <span>Read Punjab Yellow Fever Checklist</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
 
-            <div className="bg-slate-900/90 border border-emerald-500/30 rounded-2xl p-6 sm:p-8 space-y-4 shadow-xl">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-3 shadow-xs">
               <div className="flex items-center justify-between">
-                <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold">
-                  Clinical Pre-Screening
+                <span className="px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-xs font-bold">
+                  How TravelSafe Clinic Helps You
                 </span>
-                <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                <ShieldCheck className="w-5 h-5 text-teal-600" />
               </div>
-              <h3 className="text-xl font-bold text-white">TravelSafe Clinic Pre-Travel Clearance</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Medical contraindication waivers for seniors (60+) and immunosuppressed travelers, plus co-scheduled Typhoid, Hepatitis, and Malaria prophylaxis.
+              <h3 className="text-lg font-bold text-slate-900">Complete Africa & Tropical Travel Prep</h3>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Yellow Fever is only one piece of safe safari travel. At TravelSafe Clinic, we provide official contraindication waiver certificates (for ages 60+), administer Typhoid, Hepatitis A, Polio, and Rabies vaccines, and prescribe Malarone malaria prophylaxis.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Feature 6: DPDP Compliant Booking Section */}
+      {/* 6. Real Clinic Photos & Map */}
+      <ClinicGallery />
+
+      {/* 7. Simple Scheduling Card */}
       <BookingSection />
 
-      {/* Feature 7: Plain Text FAQs */}
-      <section className="py-16 bg-[#09111e] border-t border-white/5">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+      {/* 8. Plain-Language FAQs */}
+      <section className="py-16 md:py-20 bg-white border-t border-slate-200">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="text-center space-y-2 mb-10">
-            <h3 className="text-2xl font-bold text-white">Frequently Asked Clinical Questions</h3>
-            <p className="text-xs text-slate-400">Clear factual guidance for students, families, and international travelers.</p>
+            <h3 className="text-2xl font-bold text-slate-900">Common Questions</h3>
+            <p className="text-xs sm:text-sm text-slate-500">Clear answers for families, students, and international travelers.</p>
           </div>
 
           <div className="space-y-3">
             {[
               {
                 q: "Why do US and Canadian universities reject the Mantoux skin test?",
-                a: "In India, widespread infant BCG vaccination causes false-positive cross-reactions on the Mantoux tuberculin skin test. North American universities require an IGRA blood assay (such as QuantiFERON-TB Gold Plus), which specifically targets M. tuberculosis antigens and is unaffected by BCG."
+                a: "Because routine infant BCG vaccination in India frequently causes false-positive skin reactions on a Mantoux test. North American universities require a QuantiFERON-TB Gold (IGRA) blood test, which accurately screens for tuberculosis without interference from past BCG shots."
               },
               {
-                q: "Can multiple travel vaccines be administered during one visit?",
-                a: "Yes. In accordance with WHO and CDC guidelines, most inactivated travel vaccines (such as Hepatitis A, Typhoid Conjugate, Tdap, and Meningococcal ACWY) can be administered concurrently at separate anatomical injection sites."
+                q: "My parents are visiting our newborn in the USA/Canada. What vaccines do they need?",
+                a: "Obstetricians and pediatricians in the US, Canada, and UK strongly recommend that grandparents get a Tdap (Boostrix) booster at least 2 weeks before holding a newborn to prevent whooping cough transmission, alongside a current seasonal flu shot and age-appropriate Shingrix or Prevnar 20 vaccines."
+              },
+              {
+                q: "Can multiple travel vaccines be taken in a single clinic visit?",
+                a: "Yes. Per WHO and CDC guidelines, most inactivated vaccines (like Hepatitis A, Typhoid, Tdap, and Meningitis ACWY) can be given safely during the same visit in separate arms/sites, saving you extra clinic trips."
               },
               {
                 q: "How does the INR 1,000 Video Teleconsultation work?",
-                a: "You submit your university forms or travel itinerary to our clinical staff on WhatsApp. We schedule a dedicated video call with Dr. Gaurav Gupta where he audits your records, orders required blood titers, and outlines your immunization sequence."
-              },
-              {
-                q: "Where is Yellow Fever administered in Punjab?",
-                a: "Under Government of India regulations, the official Yellow Fever vaccination and International Certificates (ICVP) in Punjab are issued at Civil Hospital, Phase 6, Mohali (and AIIMS Bathinda). TravelSafe Clinic provides pre-travel clinical triage, contraindication waiver certificates, and complementary vaccines."
+                a: "Simply share your university forms or travel dates with our staff on WhatsApp. We schedule a dedicated video call with Dr. Gaurav Gupta, who audits your records, orders any needed blood tests locally, and designs your complete vaccination plan."
               }
             ].map((faq, i) => {
               const isOpen = openFaq === i;
               return (
-                <div key={i} className="bg-slate-900/60 border border-white/5 rounded-xl overflow-hidden">
+                <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden">
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpen ? null : i)}
-                    className="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-white hover:text-emerald-400 transition-colors"
+                    className="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-slate-900 hover:text-teal-700 transition-colors cursor-pointer"
                   >
                     <span>{faq.q}</span>
-                    {isOpen ? <ChevronUp className="w-4 h-4 text-emerald-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                    {isOpen ? <ChevronUp className="w-4 h-4 text-teal-600 shrink-0" /> : <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />}
                   </button>
                   {isOpen && (
-                    <div className="px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-white/5 pt-3">
+                    <div className="px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200 pt-3 bg-white">
                       {faq.a}
                     </div>
                   )}

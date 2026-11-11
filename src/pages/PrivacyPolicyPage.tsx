@@ -4,7 +4,7 @@ import { CLINIC_EMAIL, CLINIC_PHONE, DOCTOR_REG_NO } from "../components/Navbar"
 
 export function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-[#070d18] text-slate-100">
+    <div className="min-h-screen theme-light">
       
       {/* Breadcrumb Navigation */}
       <div className="bg-[#0a1222] border-b border-white/5 py-3 px-4 sm:px-6">
