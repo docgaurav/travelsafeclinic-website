@@ -7,7 +7,7 @@ import {
 
 export const CLINIC_WHATSAPP = "919653010203";
 export const CLINIC_PHONE = "+918010777722";
-export const CLINIC_EMAIL = "charakclinics@gmail.com";
+export const CLINIC_EMAIL = "hello@travelsafeclinic.in";
 export const VIDEO_CONSULT_FEE = "INR 1,000";
 export const DOCTOR_REG_NO = "PMC 39465";
 
